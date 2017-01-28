@@ -1,0 +1,84 @@
+.tasks{
+
+}
+.task{
+
+}
+.header{
+	border-radius: 15px 15px 0px 0px;
+    border: 2px;
+    border-bottom: 0px;
+    border-color: black;
+    border-style: solid;
+}
+header .icon{
+	float:left;
+	height: 100px;
+	width: 100px;
+	border-right: 1px solid black;
+}
+header .icon img{
+	height: 100px;
+	width: 100px;
+}
+header .search{
+	padding-left: 5px;
+	overflow: hidden; 
+	height: 100px;
+	width: auto;
+}
+header .search input{
+    padding: 0;
+    border: none;
+    height: 100%;
+    width: 100%;
+    outline:none;
+    font-size: 25pt;
+}
+.date-header{
+	height: 100px;
+	background: linear-gradient( #bbb, transparent 1px), linear-gradient( 90deg, #bbb, transparent 1px);
+  	background-size: 25px 25px;
+  	background-position: center center;
+}
+.test{
+	background-color: blue;
+	height: 250px;
+}
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+.main-content{
+	padding-left: 150px;
+	padding-right: 150px;
+}
+.tasks-container {
+	border: 2px solid black;
+	border-top: 0px;
+	margin-top: -12px;
+	padding-left: 100px;
+	padding-right: 100px;
+}
+.tasks{
+  min-height: 500px;
+  background: linear-gradient( #bbb, transparent 1px), linear-gradient( 90deg, #bbb, transparent 1px);
+  background-size: 25px 25px;
+  background-position: center center;
+}
+.tasks li{
+	color: #3355aa;
+    font-size: 31pt;
+    font-style: italic;
+    border-bottom: 1px solid black;
+    padding-left: 20px;
+    list-style-type: none;
+}
+.tasks span{
+	
+}
+.tasks ul{
+	padding-left: 0;
+	padding-right: 0;
+}
