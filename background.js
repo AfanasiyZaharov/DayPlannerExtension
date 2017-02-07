@@ -1,70 +1,91 @@
-//todo: add a storage for some tasks
-// add calendar
-//add a message system
-//a feature to add some tasks.
-
-var test = "test";
+//
+console.log('start');
 class Task{
-	Task( description, type, avalaibleSites, unavalaibleSites, timeset){
-		this.description = description;
+	constructor(name, type, minutes){
+		this.name = name;
 		this.type = type;
-		this.avalaibleSites = avalaibleSites;
-		this.unavalaibleSites = unavalaibleSites;
-		this.timeset = timeset;
-		this.isExist = false;
+		this.minutes = +minutes;
+		this.isSuccessed = false;
+		this.id = undefined;
 	}
-	isTaskForThisDay(date){
-		return this.timeset.isMatch(date);
-	}
-}
-class TasksStorage{
-	TasksStorage(tasks){
-		this.Storage = [];
-		this.Storage.push(tasks);
-	}
-	getTaskForDate(date){
-		var matchedTasks = [];
-		for(var i = 0; i<this.Storage.length; i++){
-			if(this.Storage[i].isTaskForThisDay(date)){
-				matchedTasks.push(this.Storage[i]);
-			}
+	startTask(){
+		if(this.type = "checkable"){
+			this.isSuccessed = true;
 		}
-		return matchedTasks;
-	}
-
-}
-class Timeset{
-	Timeset(startDate, period, endDate, type){
-		this.startDate = startDate;
-		this.period = period;
-		this.endDate = endDate;
-		this.type = type;
-	}
-	isMatch(date){
-		if(this.startDate.getFullYear()==date.getFullYear()&&
-		this.startDate.getMonth()==date.getMonth()&&
-		this.startDate.getDate()==date.getDate()){
-			return true;
-		}
-		if(type="hourly"){
-			if(period!==0){
-				return true;
-			}
-		}
-
-	}
-}
-
-chrome.runtime.onConnect.addListener(function(port){
-		if(port.name === 'PlannerPage'){
-			port.onMessage.addListener(function (message){
-				if(message.type==='getTasks'){
-					console.log('recieved');
-					port.postMessage({
-						type:"tasks", 
-						tasks: [{name: "programming", time:"1 hour"}, {name: "english", time:"1 hour"}]
-					});
+		if(this.type="atTheTime"){
+			this.interval = setInterval(()=>{
+				if(this.minutes<= 0){
+					clearInterval(this.interval);
+					this.isSuccessed = true;
 				}
+				this.minutes = this.minutes - 1;
+				storage.onChanges();
+				console.log(this.minutes);
+			}, 6000);
+		}
+	}
+	stopTask(){
+		clearInterval(this.interval);
+	}
+}
+class TaskStorage{
+	constructor(){
+		this.Storage = [];
+		this.id = -1;
+	}
+	addTask(Task){
+		Task.id = ++this.id;
+		this.Storage.push(Task);
+		this.onChanges();
+	}
+	startTask(TaskId){
+		this.Storage[TaskId].startTask(this.onChanges);
+		this.onChanges();
+	}
+	deleteTask(TaskId){
+		var index;
+		this.Storage.forEach((task)=>{
+			if(task.id == TaskId){
+				index = task.id
+			}
+		});
+		this.Storage.splice(index, 1);
+		this.onChanges();
+	}
+	onChanges(callback){
+		console.log(callback);
+		if(callback){
+			callback();
+		}
+	}
+}
+//del
+var storage = new TaskStorage();
+storage.addTask(new Task('progr','checkable'));
+storage.addTask(new Task('eng','atTheTime', 20));
+//del
+chrome.runtime.onConnect.addListener(function(port){
+	if(port.name === 'PlannerPage'){
+		storage.onChanges(function(){
+			console.log('looks good');
+			port.postMessage({
+				type:"tasks", 
+				tasks: storage.Storage
 			});
-		}	
-	})
+			console.log('looks good2');
+		});
+		port.onMessage.addListener(function (message){
+			if(message.type==='getTasks'){
+				console.log('recieved');
+				port.postMessage({
+					type:"tasks", 
+					tasks: storage.Storage
+				});
+			}
+			if(message.type==='startTask'){
+				console.log('start task' + message.id);
+				storage.startTask(message.id);
+			}			
+		});
+	}	
+});

@@ -41,6 +41,14 @@ header .search input{
   	background-size: 25px 25px;
   	background-position: center center;
 }
+.date-container{
+	margin-top: -10px;
+    float: right;
+    padding-right: 10px;
+    color: #3355aa;
+    font-size: 31pt;
+    font-style: italic;
+}
 .test{
 	background-color: blue;
 	height: 250px;
@@ -73,12 +81,24 @@ header .search input{
     font-style: italic;
     border-bottom: 1px solid black;
     padding-left: 20px;
+    padding-right: 20px;
     list-style-type: none;
 }
+.tasks .cheked{
+	text-decoration: line-through;
+}
 .tasks span{
-	
+    font-size: 15pt;
+    float: right;
 }
 .tasks ul{
 	padding-left: 0;
 	padding-right: 0;
+}
+.add-task{
+    margin-left: 20px;
+    color: #3355aa;
+    font-size: 20pt;
+    font-style: italic;
+    border: none;
 }

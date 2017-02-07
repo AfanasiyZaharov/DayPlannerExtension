@@ -2,15 +2,17 @@
 <html>
 <head>
 	<title>PAAAGE</title>
+	<link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="main.css">
 	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src ="bootstrap-3.3.7-dist/js/bootstrap.min.js" ></script>
 	<script type="text/javascript" src="main.js"></script>
 </head>
 	<body>
 	<div class="main-content">	
 		<header class="header clearfix">
 			<div class="date-header">
-				
+				<div class = "date-container"></div>
 			</div>
 			<div class="icon">
 				<img src="diary.png">
@@ -22,14 +24,16 @@
 		<div class="tasks-container">		
 			<div class="tasks">
 				<ul class="tasks-list">
-				<li>guitar 
+				<li class="cheked clearfix">guitar 
 					<span>
-						<span class = "timeset">1.00.00</span>
-						<button class = "start-stopTask">Start</button>
+						<div class = "timeset">1.00.00</div>
+						<button class = "start-stop-Task">Start</button>
 					</span>
 				</li>
 				</ul>
-		</div>
+				<div class = "add-task">Add a new Task</div>
+			</div>
+
 		</div>
 	</div>
 	</body>
