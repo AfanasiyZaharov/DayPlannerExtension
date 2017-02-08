@@ -87,7 +87,7 @@ header .search input{
 .tasks .cheked{
 	text-decoration: line-through;
 }
-.tasks span{
+.tasks .right-side-Task{
     font-size: 15pt;
     float: right;
 }

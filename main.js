@@ -11,14 +11,13 @@ $(document).ready(function(){
 		type: "getTasks"
 	});
 	backgroundPageConnection.onMessage.addListener(function(message){
-		if(message.type="tasks"){
+		if(message.type=="tasks"){
 			console.log(message.tasks);
 			addTasks(message.tasks);
 			setEventEmitters(backgroundPageConnection);
 		}
-		if(message.type="taskStarted"){
+		if(message.type=="taskStarted"){
 			console.log('started task ' + message.taskId);
-			});
 		}
 	});
 	$(document).keypress(function(e){
@@ -41,20 +40,27 @@ function addTasks(tasks){
 	$('.task').remove();
 	for(var i = 0; i<tasks.length;i++){
 		var status;
-		if(!tasks[i].minutes){
+		var seconds;
+		if(!tasks[i].seconds||tasks[i].seconds<=0){
+			seconds = '';
 			if(tasks[i].isSuccessed){
 				status = "Complete"
 			}else{
 				status = "Uncomplete"
 			}
 		}else{
-			status = tasks[i].minutes;
+			status = tasks[i].seconds/60;
+			status = Math.floor(status);
+			seconds = tasks[i].seconds % 60;
+			if(seconds==0){
+				seconds = '00';
+			}
 		}
 		var container = `
 		<li class="task clearfix" id = "${tasks[i].id}">
 			${tasks[i].name} 
-			<span>
-				<div class = "timeset"><span class="minutes">${status} :</span> <span class="seconds">00</span> </div>
+			<span class="right-side-Task">
+				<div class = "timeset"><span class="minutes">${status} :</span> <span class="seconds">${seconds}</span> </div>
 				<button class = "start-stop-Task">Start</button>
 			</span>
 		</li>`

@@ -1,27 +1,30 @@
-//
+//add port storage
 console.log('start');
 class Task{
-	constructor(name, type, minutes){
+	constructor(name, type, seconds){
 		this.name = name;
 		this.type = type;
-		this.minutes = +minutes;
+		this.seconds = +seconds;
 		this.isSuccessed = false;
 		this.id = undefined;
+		console.log(this);
 	}
 	startTask(){
-		if(this.type = "checkable"){
+		if(this.type == "checkable"){
 			this.isSuccessed = true;
 		}
-		if(this.type="atTheTime"){
+		if(this.type == "atTheTime"){
 			this.interval = setInterval(()=>{
-				if(this.minutes<= 0){
+				this.seconds = this.seconds - 1;
+				if(this.seconds<= 0){
 					clearInterval(this.interval);
 					this.isSuccessed = true;
+					storage.sendChanges();
+					return;
 				}
-				this.minutes = this.minutes - 1;
-				storage.onChanges();
-				console.log(this.minutes);
-			}, 6000);
+				storage.sendChanges();
+				console.log(this.seconds);
+			}, 1000);
 		}
 	}
 	stopTask(){
@@ -32,15 +35,29 @@ class TaskStorage{
 	constructor(){
 		this.Storage = [];
 		this.id = -1;
+		this.sendChanges = undefined;
 	}
 	addTask(Task){
 		Task.id = ++this.id;
 		this.Storage.push(Task);
-		this.onChanges();
+		if(this.sendChanges){
+			this.sendChanges();
+		}
 	}
 	startTask(TaskId){
-		this.Storage[TaskId].startTask(this.onChanges);
-		this.onChanges();
+		var index;
+		this.Storage.forEach((task, i)=>{
+			if(task.id == TaskId){
+				index = i;
+			}
+		});
+		this.Storage[index].startTask(this.onChanges);
+		if(this.sendChanges){
+			this.sendChanges();
+		}
+	}
+	stopTask(TaskId){
+
 	}
 	deleteTask(TaskId){
 		var index;
@@ -50,19 +67,20 @@ class TaskStorage{
 			}
 		});
 		this.Storage.splice(index, 1);
-		this.onChanges();
+		if(this.sendChanges){
+			this.sendChanges();
+		}
 	}
 	onChanges(callback){
-		console.log(callback);
 		if(callback){
-			callback();
+			this.sendChanges=callback;
 		}
 	}
 }
 //del
 var storage = new TaskStorage();
 storage.addTask(new Task('progr','checkable'));
-storage.addTask(new Task('eng','atTheTime', 20));
+storage.addTask(new Task('eng','atTheTime', 10));
 //del
 chrome.runtime.onConnect.addListener(function(port){
 	if(port.name === 'PlannerPage'){
