@@ -39,8 +39,9 @@ $(document).ready(function(){
 		var hours = +$('#taskHours').val();
 		var minutes = +$('#taskMinutes').val();
 		var type = $('.form-new-Task input[name="taskType"]:checked').val();
-		validateTask(name, hours, minutes, type);
+		var result = validateTask(name, hours, minutes, type);
 		postNewTask(name, hours, minutes, type, backgroundPageConnection);
+		$('#closeModal').click();
 	});
 	$('.taskTypeInput').click(function(){
 		console.log('inp');
@@ -48,7 +49,7 @@ $(document).ready(function(){
 			$('#taskHours').attr('disabled', true);
 			$('#taskMinutes').attr('disabled', true);
 		}
-		if($(this).attr('value') =='atTheTime'){
+		if($(this).attr('value') == 'atTheTime'){
 			$('#taskHours').attr('disabled', false);
 			$('#taskMinutes').attr('disabled', false);
 		}
@@ -87,7 +88,8 @@ function addTasks(tasks){
 		}
 		var container = `
 		<li class="task clearfix" id = "${tasks[i].id}">
-			${tasks[i].name} 
+			${tasks[i].name}
+			<button class="delete-Task">delete</button>
 			<span class="right-side-Task">
 				<div class = "timeset"><span class="minutes">${status} :</span> <span class="seconds">${seconds}</span> </div>
 				<button class = "start-stop-Task">${buttonText}</button>
@@ -118,6 +120,14 @@ function writeDate(){
 	$('.date-container').append(getDate());
 }
 function setEventEmitters(backgroundPageConnection){
+	$('.delete-Task').click(function(){
+		var id = $(this).parent().parent().attr('id');
+		backgroundPageConnection.postMessage({
+			type: 'deleteTask',
+			id: id
+		});
+	});
+
 	$('.start-stop-Task').click(function(){
 		var id = $(this).parent().parent().attr('id');
 		console.log('id');

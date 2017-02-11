@@ -116,6 +116,9 @@ class TaskStorage{
 			this.sendChanges();
 		}
 	}
+	editTask(Task){
+
+	}
 	onChanges(callback){
 		if(callback){
 			this.sendChanges=callback;
@@ -158,7 +161,10 @@ chrome.runtime.onConnect.addListener(function(port){
 			if(message.type === "newTask"){
 				console.log(message);
 				storage.addTask(new Task(message.name, message.taskType, message.seconds));
-			}			
+			}
+			if(message.type==="deleteTask"){
+				storage.deleteTask(message.id);
+			}		
 		});
 	}	
 });
