@@ -4,37 +4,57 @@
 	<title>PAAAGE</title>
 	<link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="main.css">
+	<link rel="stylesheet" type="text/css" href="modal.css">
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src ="bootstrap-3.3.7-dist/js/bootstrap.min.js" ></script>
 	<script type="text/javascript" src="main.js"></script>
 </head>
 	<body>
-	<div class="main-content">	
-		<header class="header clearfix">
-			<div class="date-header">
-				<div class = "date-container"></div>
-			</div>
-			<div class="icon">
-				<img src="diary.png">
-			</div>
-			<div class="search">
-				<input placeholder="Find your tasks in calendar">
-			</div>
-		</header>
-		<div class="tasks-container">		
-			<div class="tasks">
-				<ul class="tasks-list">
-				<li class="cheked clearfix">guitar 
-					<span class="right-side-Task">
-						<div class = "timeset">1.00.00</div>
-						<button class = "start-stop-Task">Start</button>
-					</span>
-				</li>
-				</ul>
-				<div class = "add-task">Add a new Task</div>
-			</div>
+		<div class="main-content">	
+			<header class="header clearfix">
+				<div class="date-header">
+					<div class = "date-container"></div>
+				</div>
+				<div class="icon">
+					<img src="diary.png">
+				</div>
+				<div class="search">
+					<input placeholder="Find your tasks in calendar">
+				</div>
+			</header>
+			<div class="tasks-container">		
+				<div class="tasks">
+					<ul class="tasks-list">
+					<li class="cheked clearfix">guitar 
+						<span class="right-side-Task">
+							<div class = "timeset">1.00.00</div>
+							<button class = "start-stop-Task">Start</button>
+						</span>
+					</li>
+					</ul>
+					<div class = "add-task" id="add-task" data-toggle="modal" data-target="#myModal">Add a new Task</div>
+				</div>
 
+			</div>
 		</div>
-	</div>
+		<div id="myModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<div class = "form-new-Task">
+					<label for="taskName">Name</label>
+					<input id = "taskName" class="name">
+					<label for="taskHours">Time</label>
+					<input id = "taskHours" type="number">
+					<input id = "taskMinutes" type="number">
+					<label for="taskType">Type</label>
+					<input type="radio" name="taskType" class="taskTypeInput" value="checkable">
+					<label for="checkable" >checkable</label>
+					<input type="radio" class="taskTypeInput" name="taskType" value="atTheTime" checked="true">	
+					<label for="atTheTime">at The Time</label>		
+					<button id = "submit">Submit</button>		
+				</div>
+				modal modal modal
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+		</div>
 	</body>
 </html>

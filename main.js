@@ -34,6 +34,26 @@ $(document).ready(function(){
 	$('#addTask').click(function(){
 		console.log('new task');
 	});
+	$('#submit').click(function(){
+		var name = $('#taskName').val();
+		var hours = +$('#taskHours').val();
+		var minutes = +$('#taskMinutes').val();
+		var type = $('.form-new-Task input[name="taskType"]:checked').val();
+		validateTask(name, hours, minutes, type);
+		postNewTask(name, hours, minutes, type, backgroundPageConnection);
+	});
+	$('.taskTypeInput').click(function(){
+		console.log('inp');
+		if($(this).attr('value') =='checkable'){
+			$('#taskHours').attr('disabled', true);
+			$('#taskMinutes').attr('disabled', true);
+		}
+		if($(this).attr('value') =='atTheTime'){
+			$('#taskHours').attr('disabled', false);
+			$('#taskMinutes').attr('disabled', false);
+		}
+	});
+
 
 });
 function addTasks(tasks){
@@ -56,12 +76,21 @@ function addTasks(tasks){
 				seconds = '00';
 			}
 		}
+		var buttonText;
+		if(tasks[i].inProgress){
+			buttonText = 'Stop'
+		}else{
+			buttonText = 'Start'
+		}
+		if(tasks[i].isSuccessed){
+			buttonText = '';
+		}
 		var container = `
 		<li class="task clearfix" id = "${tasks[i].id}">
 			${tasks[i].name} 
 			<span class="right-side-Task">
 				<div class = "timeset"><span class="minutes">${status} :</span> <span class="seconds">${seconds}</span> </div>
-				<button class = "start-stop-Task">Start</button>
+				<button class = "start-stop-Task">${buttonText}</button>
 			</span>
 		</li>`
 		$($('.tasks-list')[0]).append(container);
@@ -92,10 +121,18 @@ function setEventEmitters(backgroundPageConnection){
 	$('.start-stop-Task').click(function(){
 		var id = $(this).parent().parent().attr('id');
 		console.log('id');
-		backgroundPageConnection.postMessage({
-			type: 'startTask',
-			id: id
-		});
+		console.log($(this).text());
+		if($(this).text()=="Start"){
+			backgroundPageConnection.postMessage({
+				type: 'startTask',
+				id: id
+			});
+		}else{
+			backgroundPageConnection.postMessage({
+				type: 'stopTask',
+				id: id
+			});
+		}
 	}); 
 }
 function startTimer(id){
@@ -112,4 +149,31 @@ function startTimer(id){
 			});
 		}
 	});
+}
+function validateTask(name, hours, minutes, type){
+	var validateErrors = {};
+	if(name.length > 40){
+		validateErrors.name = false;
+	}
+	if(type=='atTheTime'){	
+		if(hours < 0){
+			validateErrors.hours = false;
+		}
+		if(minutes > 59 || minutes<0){
+			validateErrors.name = false;
+		}
+	}
+	console.log(validateErrors);
+	return validateErrors;
+}
+
+function postNewTask(name, hours, minutes, type, background){
+	 var seconds = ((+hours*60)+minutes)*60;
+	 console.log(seconds);
+	 background.postMessage({
+	 	type: 'newTask',
+	 	name: name,
+	 	seconds: seconds,
+	 	taskType: type
+	 });
 }
