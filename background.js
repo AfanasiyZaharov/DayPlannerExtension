@@ -13,24 +13,27 @@ class PortStorage{
 		this.ports.forEach((port, i)=>{
 			port.onDisconnect.addListener((port)=>{
 				this.ports.splice(i, 1);
-				this.setOnDisonnectEvents();
+				//this.setOnDisonnectEvents();
 				console.log(this.ports);
 			});
 		});
 	}
 	sendPostMessage(data){
+		console.log('1');
 		this.ports.forEach((port, i)=>{
 			try{
 				port.postMessage(data);
 			}catch(e){
-				console.error(e);
+				console.log(e);
 				this.deletePort(i);
+				this.sendPostMessage(data);
 			}
 		});
 	}
 	deletePort(portIndex){
 		console.log(this.ports);
 		this.ports.splice(portIndex, 1);
+		console.log(this.ports);
 	}
 }
 console.log('start');
