@@ -55,21 +55,49 @@
 		</div>
 		<div id="myModal" class="modal fade" role="dialog">
 			<div class="modal-dialog">
-				<div class = "form-new-Task">
-					<label for="taskName">Name</label>
-					<input id = "taskName" class="name">
-					<label for="taskHours">Time</label>
-					<input id = "taskHours" type="number">
-					<input id = "taskMinutes" type="number">
-					<label for="taskType">Type</label>
-					<input type="radio" name="taskType" class="taskTypeInput" value="checkable">
-					<label for="checkable" >checkable</label>
-					<input type="radio" class="taskTypeInput" name="taskType" value="atTheTime" checked="true">	
-					<label for="atTheTime">at The Time</label>		
-					<button id = "submit">Submit</button>		
+			    <div class="modal-content">
+      				<div class="modal-header">
+        				<h5 class="modal-title">Modal title</h5>
+        				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          					<span aria-hidden="true">&times;</span>
+        				</button>
+      				</div>
+      				<div class="modal-body">
+						<form>
+							<div class = "form-new-Task">
+								<div class="form-group">
+		    						<label for="taskName">Name</label>
+		    						<input type="text" class="form-control" id="taskName" placeholder="Enter name">
+		  						</div>
+		 						<div class="form-group">
+		    						<label for="taskHours">Name</label>
+		    						<input type="number" class="form-control" id="taskHours" placeholder="Enter hours">
+		  						</div>
+		 						<div class="form-group">
+		    						<label for="taskMinutes">Name</label>
+		    						<input type="number" class="form-control" id="taskMinutes" placeholder="Enter minutes">
+		  						</div>
+								<legend>Type</legend>
+								<div class="form-check">
+		      						<label class="form-check-label">
+		        						<input type="radio" class="form-check-input taskTypeInput" name="taskType" id="optionsRadios1" value="checkable" checked>
+		        						checkable
+		      						</label>
+		    					</div>
+								<div class="form-check">
+		      						<label class="form-check-label">
+		        						<input type="radio" class="form-check-input taskTypeInput" name="taskType" id="optionsRadios1" value="atTheTime" checked>
+		        						atTheTime
+		      						</label>
+		    					</div>	    													
+								<button type="submit" class="btn btn-primary" id="submit">Submit</button>	
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+       					<button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModal">Close</button>
+      				</div>
 				</div>
-				modal modal modal
-				<button type="button" class="close" data-dismiss="modal" id="closeModal">&times;</button>
 			</div>
 		</div>
 	</body>

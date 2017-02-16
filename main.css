@@ -143,3 +143,6 @@ header .search input{
 .task-operation{
 	font-size: 14pt; 
 }
+.idUI{
+	display: none;
+}

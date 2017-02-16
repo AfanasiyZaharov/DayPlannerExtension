@@ -4,6 +4,7 @@
 
 class TaskStates{
 	constructor(tasksFromBG){
+		this.idCounter = 0;
 		if(tasksFromBG){
 			this.updateTasks(tasksFromBG)
 		}else{
@@ -12,10 +13,35 @@ class TaskStates{
 	}
 	updateTasks(tasksFromBG){
 		this.tasks = [];	
+		this.idCounter = 0;
 		tasksFromBG.forEach((task)=>{
+			var newTask = {};
+			newTask = task;
+			newTask.idUI = this.idCounter;
 			this.tasks.push(task);
+			this.idCounter++;
 		});
-		this.updateUI()
+		this.updateUI();
+	}
+	getIdbyidUI(idUI){
+		idUI = +idUI;
+		var resId;
+		this.tasks.forEach((task)=>{
+			if(idUI==task.idUI){
+				resId =  task.id;
+			}
+		});
+		return resId;
+	}
+	getTaskbyidUI(idUI){
+		idUI = +idUI;
+		var res;
+		this.tasks.forEach((task)=>{
+			if(idUI==task.idUI){
+				resId =  task;
+			}
+		});
+		return res;		
 	}
 	updateUI(){
 		console.log(this.tasks);
@@ -50,24 +76,32 @@ class TaskStates{
 			}
 			var container = `
 			<div href="#" class = "list-group-item list-group-item-action task" >
+				<span class = "idUI">${this.tasks[i].idUI}</span>
+
 				<span class="task-name">${this.tasks[i].name}
 				</span>
+
 				<span class="right-side">
+
 					<span class = "task-status task-status-unfulfilled">
 					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 						uncomplete
-					</span>				
+					</span>	
+
 					<span class="time time-sector">
 						<span class="minutes">${status}</span><span class="seconds">${seconds}</span>
 						<button type="button" class = "btn btn-info start-stop-Task">${buttonText}</button>
 					</span>
+
 					<span class="task-operations">
 						<div class="task-operation">
-							<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+							<span class="glyphicon glyphicon-edit edit-Task" aria-hidden="true"></span>
 						</div>
+
 						<div class="task-operation">
 							<span class="glyphicon glyphicon-remove-sign delete-Task" aria-hidden="true"></span>
 						</div>
+
 					</span>
 				</span>
 			</div>`																
@@ -129,6 +163,9 @@ $(document).ready(function(){
 		$('#taskName').val('');
 		$('#taskHours').val('');
 		$('#taskMinutes').val('');
+		if($('#idField').length!=0){
+			$('#idField').remove();
+		}
 
 	});
 
@@ -172,9 +209,24 @@ $(document).ready(function(){
 		$('.date-container').append(getDate());
 	}
 	function setEventEmitters(backgroundPageConnection){
+		$('.edit-Task').click(function(){
+			var parent = $(this).closest('.task');
+			var idUI = $(parent).find('.idUI').text();
+			var id = taskStorage.getIdbyidUI(idUI);
+			var task = taskStorage.getTaskbyidUI(idUI);
+			var container = `<span id = "idField">${id}<span>`;
+			$('.modal-footer').append(container);
+			$('#idField').hide();
+			$('#taskName').val(task.name);
+			$('#taskHours').val('');
+			$('#taskMinutes').val('');
+			$('#add-task').click();
+		});
+
 		$('.delete-Task').click(function(){
-			var id = $(this).parent().parent().attr('id');
-			console.log(id);
+			var parent = $(this).closest('.task');
+			var idUI = $(parent).find('.idUI').text();
+			var id = taskStorage.getIdbyidUI(idUI);
 			backgroundPageConnection.postMessage({
 				type: 'deleteTask',
 				id: id
