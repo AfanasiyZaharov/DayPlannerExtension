@@ -37,6 +37,7 @@ class TaskStates{
 				if(seconds==0){
 					seconds = '00';
 				}
+				status = status + ':';
 			}
 			var buttonText;
 			if(this.tasks[i].inProgress){
@@ -48,15 +49,28 @@ class TaskStates{
 				buttonText = '';
 			}
 			var container = `
-			<li class="task clearfix">
-				${this.tasks[i].name}
-				<button class="delete-Task">delete</button>
-				<button class="edit-Task">edit</button>
-				<span class="right-side-Task">
-					<div class = "timeset"><span class="minutes">${status} :</span> <span class="seconds">${seconds}</span> </div>
-					<button class = "start-stop-Task">${buttonText}</button>
+			<div href="#" class = "list-group-item list-group-item-action task" >
+				<span class="task-name">${this.tasks[i].name}
 				</span>
-			</li>`
+				<span class="right-side">
+					<span class = "task-status task-status-unfulfilled">
+					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+						uncomplete
+					</span>				
+					<span class="time time-sector">
+						<span class="minutes">${status}</span><span class="seconds">${seconds}</span>
+						<button type="button" class = "btn btn-info start-stop-Task">${buttonText}</button>
+					</span>
+					<span class="task-operations">
+						<div class="task-operation">
+							<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+						</div>
+						<div class="task-operation">
+							<span class="glyphicon glyphicon-remove-sign delete-Task" aria-hidden="true"></span>
+						</div>
+					</span>
+				</span>
+			</div>`																
 			$($('.tasks-list')[0]).append(container);
 		}
 	}
@@ -120,7 +134,7 @@ $(document).ready(function(){
 
 	$('.edit-Task').click(function(){
 		var id = getTaskId(self, '.edit-task')
-		$('#taskName').val(taskStorage[]);
+		//$('#taskName').val(taskStorage[]);
 
 		$('#add-task').click();
 	});
@@ -160,6 +174,7 @@ $(document).ready(function(){
 	function setEventEmitters(backgroundPageConnection){
 		$('.delete-Task').click(function(){
 			var id = $(this).parent().parent().attr('id');
+			console.log(id);
 			backgroundPageConnection.postMessage({
 				type: 'deleteTask',
 				id: id
@@ -181,6 +196,7 @@ $(document).ready(function(){
 		$('.start-stop-Task').click(function(){
 			var id = getTaskId(this, '.start-stop-Task');
 			console.log('id');
+			console.log(id);
 			console.log($(this).text());
 			if($(this).text()=="Start"){
 				backgroundPageConnection.postMessage({

@@ -109,9 +109,9 @@ class TaskStorage{
 	}
 	deleteTask(TaskId){
 		var index;
-		this.Storage.forEach((task)=>{
+		this.Storage.forEach((task, i)=>{
 			if(task.id == TaskId){
-				index = task.id
+				index = i;
 			}
 		});
 		this.Storage.splice(index, 1);

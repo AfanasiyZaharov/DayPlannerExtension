@@ -76,13 +76,13 @@ header .search input{
   background-position: center center;
 }
 .tasks li{
-	color: #3355aa;
+/*	color: #3355aa;
     font-size: 31pt;
     font-style: italic;
     border-bottom: 1px solid black;
     padding-left: 20px;
     padding-right: 20px;
-    list-style-type: none;
+    list-style-type: none;*/
 }
 .tasks .cheked{
 	text-decoration: line-through;
@@ -92,8 +92,9 @@ header .search input{
     float: right;
 }
 .tasks ul{
-	padding-left: 0;
+/*	padding-left: 0;
 	padding-right: 0;
+	*/
 }
 .add-task{
     margin-left: 20px;
@@ -101,4 +102,44 @@ header .search input{
     font-size: 20pt;
     font-style: italic;
     border: none;
+}
+.right-side{
+	float: right;
+	display: inline-block;
+}
+.time-sector{
+	padding: 5px;
+	display: inline-block;
+	border: 1px solid grey;
+	background-color: rgba(221, 221, 221, 0.26);
+	border-radius: 5px;
+}
+.task-name{
+	font-size: 22pt;
+    max-width: 82%;
+    min-width: 75%;
+    color: #3355aa;
+}
+.task-status{
+	display: inline-block;
+	border: 1px solid grey;
+	border-radius: 10px;
+	padding: 3px;
+	color: white;
+}
+.task-status-successfull{
+	background-color: #5bc0de;
+	border-color: #46b8da;
+}
+.task-status-unfulfilled{
+	background-color: #B5121A;
+	border-color: #A61C23;
+}
+.task-operations{
+	padding-left: 5px;
+    float: right;
+    width: 15px;
+}
+.task-operation{
+	font-size: 14pt; 
 }
