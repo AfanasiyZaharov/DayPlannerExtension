@@ -19,7 +19,6 @@ class PortStorage{
 		});
 	}
 	sendPostMessage(data){
-		console.log('1');
 		this.ports.forEach((port, i)=>{
 			try{
 				port.postMessage(data);
@@ -80,6 +79,7 @@ class TaskStorage{
 		this.sendChanges = undefined;
 	}
 	addTask(Task){
+		console.log(Task);
 		Task.id = ++this.id;
 		this.Storage.push(Task);
 		if(this.sendChanges){
@@ -87,6 +87,7 @@ class TaskStorage{
 		}
 	}
 	startTask(TaskId){
+		console.log('started ' + TaskId);
 		this.findTask(TaskId).startTask();
 		if(this.sendChanges){
 			this.sendChanges();
@@ -98,6 +99,24 @@ class TaskStorage{
 			this.sendChanges();
 		}		
 	}
+	editTask(TaskId, Task){
+
+		console.log(Task);
+		this.findTask(TaskId);
+		var index;
+		this.Storage.forEach((task, i)=>{
+			if(task.id == TaskId){
+				index = i;
+			}
+		});
+		console.log(this.Storage[index]);
+		Task.id = this.Storage[index].id;
+		this.Storage[index] = Task;
+		if(this.sendChanges){
+			this.sendChanges();
+		}
+	}
+
 	findTask(TaskId){
 		var index;
 		this.Storage.forEach((task, i)=>{
@@ -119,9 +138,6 @@ class TaskStorage{
 			this.sendChanges();
 		}
 	}
-	editTask(Task){
-
-	}
 	onChanges(callback){
 		if(callback){
 			this.sendChanges=callback;
@@ -138,17 +154,16 @@ chrome.runtime.onConnect.addListener(function(port){
 	if(port.name === 'PlannerPage'){
 		portStorage.addPort(port);
 		storage.onChanges(function(){
-			console.log('looks good');
+			console.log(storage.Storage);
 			portStorage.sendPostMessage({
 				type:"tasks", 
 				tasks: storage.Storage
 			});
-			console.log('looks good2');
 		});
 		port.onMessage.addListener(function (message){
 			console.log(message);
 			if(message.type==='getTasks'){
-				console.log('recieved');
+				console.log(storage.Storage);
 				port.postMessage({
 					type:"tasks", 
 					tasks: storage.Storage
@@ -161,12 +176,18 @@ chrome.runtime.onConnect.addListener(function(port){
 				console.log('stop task' + message.id);
 				storage.stopTask(message.id);
 			}			
-			if(message.type === "newTask"){
+			if(message.type==='newTask'){
 				console.log(message);
 				storage.addTask(new Task(message.name, message.taskType, message.seconds));
 			}
-			if(message.type==="deleteTask"){
+			if(message.type==='deleteTask'){
 				storage.deleteTask(message.id);
+			}
+			if(message.type==='editedTask'){
+				console.log(message);
+				var task = new Task(message.name, message.taskType, message.seconds);
+				storage.editTask(message.id, task);
+				console.log('asdddd');
 			}		
 		});
 	}	

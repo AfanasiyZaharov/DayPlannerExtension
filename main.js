@@ -11,15 +11,36 @@ class TaskStates{
 			this.tasks = [];
 		}
 	}
+	convertTask(taskFromBG){
+		var newTask={};
+		newTask = taskFromBG;
+		newTask.idUI = this.idCounter;
+		this.idCounter++;
+		if(taskFromBG.type=='atTheTime'){
+			var minutes = taskFromBG.seconds/60;
+			minutes = Math.floor(minutes);
+			var seconds = taskFromBG.seconds % 60;
+			if(seconds < 10){
+				seconds = '0' + seconds;
+			}
+			var hours = minutes/60;
+			hours = Math.floor(hours);
+			minutes = minutes % 60;
+			if(minutes < 10){
+				minutes = '0' + minutes;
+			}
+			newTask.hours = hours;
+			newTask.minutes = minutes;
+			newTask.seconds = seconds;
+		}
+		console.log(newTask);
+		return newTask;
+	}
 	updateTasks(tasksFromBG){
 		this.tasks = [];	
 		this.idCounter = 0;
 		tasksFromBG.forEach((task)=>{
-			var newTask = {};
-			newTask = task;
-			newTask.idUI = this.idCounter;
-			this.tasks.push(task);
-			this.idCounter++;
+			this.tasks.push(this.convertTask(task));
 		});
 		this.updateUI();
 	}
@@ -38,7 +59,7 @@ class TaskStates{
 		var res;
 		this.tasks.forEach((task)=>{
 			if(idUI==task.idUI){
-				resId =  task;
+				res =  task;
 			}
 		});
 		return res;		
@@ -47,33 +68,47 @@ class TaskStates{
 		console.log(this.tasks);
 		$('.task').remove();
 		for(var i = 0; i<this.tasks.length;i++){
-			var status;
-			var seconds;
-			if(!this.tasks[i].seconds||this.tasks[i].seconds<=0){
-				seconds = '';
-				if(this.tasks[i].isSuccessed){
-					status = "Complete"
-				}else{
-					status = "Uncomplete"
-				}
-			}else{
-				status = this.tasks[i].seconds/60;
-				status = Math.floor(status);
-				seconds = this.tasks[i].seconds % 60;
-				if(seconds==0){
-					seconds = '00';
-				}
-				status = status + ':';
-			}
 			var buttonText;
+			var statusContainer;
+			var classStatus;
 			if(this.tasks[i].inProgress){
-				buttonText = 'Stop'
+				buttonText = `<button type="button" class = "btn btn-info start-stop-Task">Stop</button>`
 			}else{
-				buttonText = 'Start'
+				buttonText = `<button type="button" class = "btn btn-info start-stop-Task">Start</button>`
+			}
+			if(this.tasks[i].type=='atTheTime'){
+				classStatus = `
+					<span class="hours">${this.tasks[i].hours}:</span><span class="minutes">${this.tasks[i].minutes}:</span><span class="seconds">${this.tasks[i].seconds}</span>
+				`
+			}else{
+				classStatus = ``;
 			}
 			if(this.tasks[i].isSuccessed){
-				buttonText = '';
+				statusContainer = `
+					<span class = "task-status task-status-successfull">
+					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+						complete
+					</span>	
+				`
+			}else{
+				statusContainer = `
+					<span class = "task-status task-status-unfulfilled">
+					<span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+						uncomplete
+					</span>	
+
+					<span class="time time-sector">
+						${classStatus}
+						${buttonText}
+					</span>
+				`
 			}
+			if(this.tasks[i].isSuccessed){
+				buttonText = ``;
+			}
+			if(this.tasks[i].type=='checkable'){
+			}
+			
 			var container = `
 			<div href="#" class = "list-group-item list-group-item-action task" >
 				<span class = "idUI">${this.tasks[i].idUI}</span>
@@ -82,17 +117,7 @@ class TaskStates{
 				</span>
 
 				<span class="right-side">
-
-					<span class = "task-status task-status-unfulfilled">
-					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-						uncomplete
-					</span>	
-
-					<span class="time time-sector">
-						<span class="minutes">${status}</span><span class="seconds">${seconds}</span>
-						<button type="button" class = "btn btn-info start-stop-Task">${buttonText}</button>
-					</span>
-
+					${statusContainer}
 					<span class="task-operations">
 						<div class="task-operation">
 							<span class="glyphicon glyphicon-edit edit-Task" aria-hidden="true"></span>
@@ -156,6 +181,9 @@ $(document).ready(function(){
 		console.log($('#idField'));
 		if($('#idField').length==0){
 			postNewTask(name, hours, minutes, type, backgroundPageConnection);
+		}else{
+			var id = +$('#idField').text();
+			postEditedTask(name, hours, minutes, type, id, backgroundPageConnection);
 		}
 		$('#closeModal').click();
 	});
@@ -210,6 +238,7 @@ $(document).ready(function(){
 	}
 	function setEventEmitters(backgroundPageConnection){
 		$('.edit-Task').click(function(){
+			console.log('edit');
 			var parent = $(this).closest('.task');
 			var idUI = $(parent).find('.idUI').text();
 			var id = taskStorage.getIdbyidUI(idUI);
@@ -218,8 +247,16 @@ $(document).ready(function(){
 			$('.modal-footer').append(container);
 			$('#idField').hide();
 			$('#taskName').val(task.name);
-			$('#taskHours').val('');
-			$('#taskMinutes').val('');
+			$('#taskHours').val(task.hours);
+			$('#taskMinutes').val(task.minutes);
+
+			var inputs = $('.form-new-Task input[name="taskType"]');
+			for(var i = 0; i< inputs.length; i++){
+				if($(inputs[i]).val()== task.type){
+					$(inputs[i]).click();
+				}
+			}
+			
 			$('#add-task').click();
 		});
 
@@ -246,10 +283,9 @@ $(document).ready(function(){
 			return id;
 		}
 		$('.start-stop-Task').click(function(){
-			var id = getTaskId(this, '.start-stop-Task');
-			console.log('id');
-			console.log(id);
-			console.log($(this).text());
+			var parent = $(this).closest('.task');
+			var idUI = $(parent).find('.idUI').text();
+			var id = taskStorage.getIdbyidUI(idUI);
 			if($(this).text()=="Start"){
 				backgroundPageConnection.postMessage({
 					type: 'startTask',
@@ -261,7 +297,7 @@ $(document).ready(function(){
 					id: id
 				});
 			}
-		}); 
+		});
 	}
 	function validateTask(name, hours, minutes, type){
 		var validateErrors = {};
@@ -289,5 +325,16 @@ $(document).ready(function(){
 		 	seconds: seconds,
 		 	taskType: type
 		 });
+	}
+	function postEditedTask(name, hours, minutes, type, id, background){
+		var seconds = ((+hours*60)+minutes)*60;
+		console.log(seconds);
+		background.postMessage({
+		 	type: 'editedTask',
+		 	id: id,
+		 	name: name,
+		 	seconds: seconds,
+		 	taskType: type
+		});
 	}
 });
