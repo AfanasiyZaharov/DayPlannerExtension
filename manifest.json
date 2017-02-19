@@ -3,13 +3,11 @@
   "version" : "0.1",
   "description" : "It helps you to plan your days",
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["js/background.js"]
   },
     "chrome_url_overrides" : {
-    "newtab": "MainPage.html"
+    "newtab": "html/MainPage.html"
     },
       "manifest_version": 2
 }
 
-
-//chrome-search://local-ntp/local-ntp.html
