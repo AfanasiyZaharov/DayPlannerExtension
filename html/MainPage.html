@@ -22,32 +22,27 @@
 					<input placeholder="Find your tasks in calendar">
 				</div>
 			</header>
-			<div class="tasks-container ">		
+			<div class="tasks-container ">	
+				<div class="menu clerfix">
+					<div class="menu-head">
+						<ul>
+							<li>
+								<a href="#">Tasks</a>
+							</li>
+							<li>
+								<a href="#">History
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
 				<div class="tasks">
 					<ul class="tasks-list list-group">
-						<div href="#" class = "list-group-item list-group-item-action" >
-						<span class="task-name">some task</span>
-							<span class="right-side">
-								<span class = "task-status task-status-successfull">
-								<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-									uncomplete
-								</span>
-								<span class="time time-sector">
-									<span class="minutes">2:</span><span class="seconds">12</span>
-									<button type="button" class = "btn btn-info">start</button>
-								</span>
-								<span class="task-operations">
-									<div class="task-operation">
-										<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-									</div>
-									<div class="task-operation">
-										<span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
-									</div>
-								</span>
-							</span>
-						</div>
 					</ul>
-					<div class = "add-task" id="add-task" data-toggle="modal" data-target="#myModal">Add a new Task</div>
+					<button class=" btn btn-info add-task" id="add-task" data-toggle="modal" data-target="#myModal">
+					<span class="glyphicon glyphicon-plus"></span>
+					add a new task
+					</button>
 				</div>
 
 			</div>

@@ -74,9 +74,25 @@ class Task{
 }
 class TaskStorage{
 	constructor(){
+		console.log('constructor');
+		this.chromeStorage = chrome.storage.local;
 		this.Storage = [];
+		this.getFromStorage(this.Storage);
 		this.id = -1;
 		this.sendChanges = undefined;
+	}
+	getFromStorage(Storage){
+		this.chromeStorage.get(null, function(data){
+			console.log(Storage);
+			Storage = data.tasksStorage;
+		})
+	}
+	setOnStorage(){
+		this.chromeStorage.set({tasksStorage:this.Storage}, ()=>{
+			this.chromeStorage.get(null, function(data){
+				console.log(data);
+			})
+		});
 	}
 	addTask(Task){
 		console.log(Task);
@@ -85,6 +101,7 @@ class TaskStorage{
 		if(this.sendChanges){
 			this.sendChanges();
 		}
+		this.setOnStorage();
 	}
 	startTask(TaskId){
 		console.log('started ' + TaskId);
@@ -139,6 +156,7 @@ class TaskStorage{
 		}
 	}
 	onChanges(callback){
+
 		if(callback){
 			this.sendChanges=callback;
 		}

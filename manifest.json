@@ -8,6 +8,9 @@
     "chrome_url_overrides" : {
     "newtab": "html/MainPage.html"
     },
+    "permissions": [
+          "storage"
+        ],
       "manifest_version": 2
 }
 
